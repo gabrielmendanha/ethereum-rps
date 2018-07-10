@@ -1,0 +1,42 @@
+<h1 class="display-4 text-center">Welcome!</h1>
+<div class="row justify-content-center">
+    <form [formGroup]="beginGameForm" class="w-45">
+        <div class="col-md-12 mb-2">
+            <input type="text" class="form-control" formControlName="player2" placeholder="Player's 2 Ethereum address">
+        </div>
+        <div class="col-md-12 mb-2">
+            <div class="input-group">
+                <div class="input-group-prepend">
+                    <span class="input-group-text">Ξ</span>
+                </div>
+                <input type="number" step="0.01" class="form-control" formControlName="value">
+            </div>
+        </div>
+        <div class="col-md-12 mb-2 text-center">
+
+            <div class="btn-group btn-group-toggle" ngbRadioGroup name="radioBasic" formControlName="move">
+                <label ngbButtonLabel class="btn-light">
+                  <input ngbButton type="radio" [value]="1"> Rock
+                </label>
+                <label ngbButtonLabel class="btn-light">
+                  <input ngbButton type="radio" [value]="2"> Paper
+                </label>
+                <label ngbButtonLabel class="btn-light">
+                  <input ngbButton type="radio" [value]="3"> Scissors
+                </label>
+                <label ngbButtonLabel class="btn-light">
+                  <input ngbButton type="radio" [value]="4"> Lizard
+                </label>
+                <label ngbButtonLabel class="btn-light">
+                  <input ngbButton type="radio" [value]="5"> Spock
+                </label>
+            </div>
+        </div>
+        <div class="col-md-12 mb-2 text-center">
+            <button type="button" class="btn btn-primary" *ngIf="!loading && !show_error && !show_success" (click)="startGame()">Let's play!</button>
+            <button type="button" class="btn btn-warning" *ngIf="loading"><i class="fa fa-refresh fa-spin fa-1x"></i> Transaction pending</button>
+            <button type="button" class="btn btn-success" *ngIf="show_success && !loading"><i class="fa fa-check fa-1x"></i> Everything set up!</button>
+            <button type="button" class="btn btn-danger" *ngIf="show_error && !loading" (click)="startGame()"><i class="fa fa-times fa-1x"></i> Oh no! (try again)</button>
+        </div>
+    </form>
+</div>
