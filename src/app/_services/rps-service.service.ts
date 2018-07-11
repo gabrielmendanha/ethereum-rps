@@ -217,10 +217,10 @@ export class RpsService {
       "type": "function"
     }
   ]
-  private require: any;
   private web3: any;
-  private contractAddress: any;
-  private hasher = "0x1c9D63870489DaE62f9D5469Cb2456925c5d72F3";
+  private gameContractAddress: any;
+  private gameContract: any;
+  private hasherContractAddress = "0x1c9D63870489DaE62f9D5469Cb2456925c5d72F3";
   private hasherContract: any;
   private defaultUserAccount: any;
 
@@ -228,11 +228,18 @@ export class RpsService {
     if (typeof window['web3'] !== 'undefined') {
 
       this.web3 = new Web3(window['web3'].currentProvider);
-      this.hasherContract = new this.web3.eth.Contract(this.hasherAbi,  this.hasher);
+      this.hasherContract = new this.web3.eth.Contract(this.hasherAbi,  this.hasherContractAddress);
     }
   }
 
   //0x29515e6D1Abd9459450e0c5036e7B34E6D89AcbA
+
+  getGameContract(gameContractAddress){
+    if(this.gameContract)
+      return this.gameContract
+    else 
+      return this.gameContract = new this.web3.eth.Contract(this.contractAbi, gameContractAddress);
+  }
 
   getUser() {
     if(this.defaultUserAccount)
@@ -301,6 +308,10 @@ export class RpsService {
         gas: 1500000,
         gasPrice: '10000000000'
       }, (error, transaction) => {
+        if(error)
+          return error
+        this.gameContractAddress = transaction._address;
+        this.gameContract = new this.web3.eth.Contract(this.contractAbi,  this.gameContractAddress);
         return transaction;
       });
   }
@@ -310,6 +321,22 @@ export class RpsService {
   }
 
   calculateHash(move, salt) {
-    return this.hasherContract.methods.hash(move, salt).call({from: this.defaultUserAccount, gas: 1500000, gasPrice: '10000000000'});
+    return this.hasherContract.methods.hash(move, salt).call({from: this.defaultUserAccount});
+  }
+
+  reveal(move, salt){
+    return this.gameContract.methods.solve(move, salt).send({from: this.defaultUserAccount, gas: 1500000, gasPrice: '10000000000'});
+  }
+
+  j1Timeout(){
+    return this.gameContract.methods.j1Timeout().send({from: this.defaultUserAccount, gas: 1500000, gasPrice: '10000000000'});
+  }
+
+  j2Timeout(){
+    return this.gameContract.methods.j2Timeout().send({from: this.defaultUserAccount, gas: 1500000, gasPrice: '10000000000'});
+  }
+
+  getStake(){
+    return this.gameContract.methods.stake().call({from: this.defaultUserAccount});
   }
 }

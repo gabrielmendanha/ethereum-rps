@@ -1,7 +1,7 @@
 import { Component, OnInit, AfterContentChecked } from '@angular/core';
 import { RpsService } from '../_services/rps-service.service';
-import {NgbModule} from '@ng-bootstrap/ng-bootstrap';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-main',
@@ -20,7 +20,7 @@ export class MainComponent implements OnInit {
   show_success: boolean = false;
   show_error: boolean = false;
 
-  constructor(private rps_service: RpsService) { }
+  constructor(private rps_service: RpsService, private router: Router, ) { }
 
   ngOnInit() {
     this.initForm();
@@ -35,13 +35,18 @@ export class MainComponent implements OnInit {
     this.beginGameForm = new FormGroup({
       player2: new FormControl('', Validators.required),
       value: new FormControl(0, Validators.required),
-      move: new FormControl(0, Validators.required)
+      move: new FormControl(1, Validators.required)
     })
   }
 
   // 0x29515e6D1Abd9459450e0c5036e7B34E6D89AcbA
 
   startGame(){
+    if(!this.web3.utils.isAddress(this.beginGameForm.controls.player2.value)){
+      this.show_error = true;
+      return
+    }
+
     this.beginGameForm.disable();
     let randomString = this.rps_service.calculateRandomString();
     this.rps_service.calculateHash(this.beginGameForm.controls.move.value, randomString).then(hash => {
@@ -50,10 +55,14 @@ export class MainComponent implements OnInit {
       this.rps_service.createGame(hash, this.beginGameForm.controls.player2.value, this.beginGameForm.controls.value.value)
       .then(transaction => {
         if(transaction._address){
-          //  TODO Add transaction hash to local storage
           localStorage.setItem("contract_address", transaction._address);
+          localStorage.setItem("salt", randomString);
+          localStorage.setItem("move", this.beginGameForm.controls.move.value)
           this.loading = false;
           this.show_success = true;
+          setTimeout(() => {
+            this.router.navigate(['/game/player1/' + transaction._address])
+          }, 2000)
         }
       }, error => {
         this.loading = false;

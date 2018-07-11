@@ -1,4 +1,4 @@
-<h1 class="display-4 text-center">Welcome!</h1>
+<h1 class="text-center">Welcome!</h1>
 <div class="row justify-content-center">
     <form [formGroup]="beginGameForm" class="w-45">
         <div class="col-md-12 mb-2">
@@ -16,7 +16,7 @@
 
             <div class="btn-group btn-group-toggle" ngbRadioGroup name="radioBasic" formControlName="move">
                 <label ngbButtonLabel class="btn-light">
-                  <input ngbButton type="radio" [value]="1"> Rock
+                  <input ngbButton default type="radio" [value]="1"> Rock
                 </label>
                 <label ngbButtonLabel class="btn-light">
                   <input ngbButton type="radio" [value]="2"> Paper
@@ -33,10 +33,10 @@
             </div>
         </div>
         <div class="col-md-12 mb-2 text-center">
-            <button type="button" class="btn btn-primary" *ngIf="!loading && !show_error && !show_success" (click)="startGame()">Let's play!</button>
-            <button type="button" class="btn btn-warning" *ngIf="loading"><i class="fa fa-refresh fa-spin fa-1x"></i> Transaction pending</button>
-            <button type="button" class="btn btn-success" *ngIf="show_success && !loading"><i class="fa fa-check fa-1x"></i> Everything set up!</button>
-            <button type="button" class="btn btn-danger" *ngIf="show_error && !loading" (click)="startGame()"><i class="fa fa-times fa-1x"></i> Oh no! (try again)</button>
+            <button type="button" class="btn btn-primary btn-lg" [disabled]="!beginGameForm.valid" *ngIf="!loading && !show_error && !show_success" (click)="startGame()">Let's play!</button>
+            <button type="button" class="btn btn-warning btn-lg" *ngIf="loading"><i class="fa fa-refresh fa-spin fa-1x"></i> Transaction pending</button>
+            <button type="button" class="btn btn-success btn-lg" *ngIf="show_success && !loading"><i class="fa fa-check fa-1x"></i> Everything set up!</button>
+            <button type="button" class="btn btn-danger btn-lg" *ngIf="show_error && !loading" (click)="startGame()"><i class="fa fa-times fa-1x"></i> Oh no! (try again)</button>
         </div>
     </form>
 </div>

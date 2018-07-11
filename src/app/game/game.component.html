@@ -1,0 +1,18 @@
+<h1 *ngIf="!hasPlayer2Move && !gameFinalized" class="text-center">Player 2 has 5 minutes to make a move</h1>
+<h1 *ngIf="hasPlayer2Move && !gameFinalized" class="text-center">You have 5 minutes to reveal your move</h1>
+<h1 *ngIf="gameFinalized" class="text-center">Game finalized!</h1>
+<div class="row justify-content-center">
+    <div class="col-md-8 text-center">
+        <ngb-alert *ngIf="!gameFinalized" [dismissible]="false" [type]="'warning'">{{ salt }} is your secret.</ngb-alert>
+        <ngb-alert *ngIf="won && gameFinalized" [dismissible]="false" [type]="'success'">🎉 You won! Congratulations! 🎉 </ngb-alert>
+        <ngb-alert *ngIf="!won && gameFinalized" [dismissible]="false" [type]="'danger'"> Better luck next time 😩 </ngb-alert>
+    </div>
+</div>
+<div class="row">
+    <div class="col-md-6 text-right">
+        <button type="button" class="btn btn-primary btn-lg" [disabled]="!hasPlayer2Move" (click)="reveal()"> <i *ngIf="loadingReveal" class="fa fa-refresh fa-spin fa-1x"></i> Reveal</button>
+    </div>
+    <div class="col-md-6 text-left">
+        <button type="button" class="btn btn-danger btn-lg" [disabled]="hasPlayer2Move" (click)="refund()"> <i *ngIf="loadingRefund" class="fa fa-refresh fa-spin fa-1x"></i> Refund</button>
+    </div>
+</div>
