@@ -7,12 +7,14 @@ import { AppComponent } from './app.component';
 import { MainComponent } from './main/main.component';
 import { RpsService } from './_services/rps-service.service';
 import { GameComponent } from './game/game.component';
+import { Player2Component } from './player2/player2.component';
 
 @NgModule({
   declarations: [
     AppComponent,
     MainComponent,
-    GameComponent
+    GameComponent,
+    Player2Component
   ],
   imports: [
     BrowserModule,

@@ -235,65 +235,30 @@ export class RpsService {
   //0x29515e6D1Abd9459450e0c5036e7B34E6D89AcbA
 
   getGameContract(gameContractAddress){
-    if(this.gameContract)
-      return this.gameContract
+    if(this.gameContract){
+      this.gameContract.options.address = gameContractAddress;
+      return this.gameContract;
+    }
     else 
       return this.gameContract = new this.web3.eth.Contract(this.contractAbi, gameContractAddress);
   }
 
   getUser() {
     if(this.defaultUserAccount)
-      return this.defaultUserAccount;
-    else
-      return this.web3.eth.getAccounts((error, accounts) => {
-        this.defaultUserAccount = accounts[0];
-        return this.defaultUserAccount;
+      return new Promise((resolve, reject) => {
+        resolve(this.defaultUserAccount);
       });
-  }
-
-  getTransactionReceiptMined(txHash, interval) {
-    const transactionReceiptAsync = function(resolve, reject) {
-        this.web3.eth.getTransactionReceipt(txHash, (error, receipt) => {
-            if (error) {
-                reject(error);
-            } else if (receipt == null) {
-                setTimeout(
-                    () => transactionReceiptAsync(resolve, reject),
-                    interval ? interval : 500);
-            } else {
-                resolve(receipt);
-            }
+    else
+      return new Promise((resolve, reject) => {
+        return this.web3.eth.getAccounts((error, accounts) => {
+          this.defaultUserAccount = accounts[0];
+          resolve(this.defaultUserAccount);
         });
-    };
-
-    if (Array.isArray(txHash)) {
-        return Promise.all(txHash.map(
-            oneTxHash => this.getTransactionReceiptMined(oneTxHash, interval)));
-    } else if (typeof txHash === "string") {
-        return new Promise(transactionReceiptAsync);
-    } else {
-        throw new Error("Invalid Type: " + txHash);
-    }
-};
+      })
+  }
 
   getWeb3Object(){
     return this.web3;
-  }
-
-  checkProvider(): boolean {
-    if(typeof window['web3'] !== 'undefined')
-      return true
-    else
-      return false
-  }
-
-  checkNetwork(): boolean {
-    return this.web3.eth.net.getNetworkType().then(network => {
-      if(network !== "ropsten")
-        return false
-      else
-        return true
-    });
   }
 
   createGame(hash, player2, value) {
@@ -338,5 +303,19 @@ export class RpsService {
 
   getStake(){
     return this.gameContract.methods.stake().call({from: this.defaultUserAccount});
+  }
+
+  play(stake, move){
+    return this.gameContract.methods.play(move).send({
+      from: this.defaultUserAccount,
+      value: stake,
+      gas: 1500000,
+      gasPrice: '10000000000'},
+      (error, transaction) => {
+        if(error){
+          return false
+        }
+        return true;
+      });
   }
 }
