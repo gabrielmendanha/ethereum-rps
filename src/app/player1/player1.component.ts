@@ -6,7 +6,7 @@ import { Router } from '@angular/router';
   selector: 'app-game',
   templateUrl: './game.component.html',
 })
-export class GameComponent implements OnInit {
+export class Player1Component implements OnInit {
   salt: any;
   gameContract: any;
   move: any;
