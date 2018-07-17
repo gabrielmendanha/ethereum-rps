@@ -3,8 +3,8 @@ import { RpsService } from '../_services/rps-service.service';
 import { Router } from '@angular/router';
 
 @Component({
-  selector: 'app-game',
-  templateUrl: './game.component.html',
+  selector: 'app-player1',
+  templateUrl: './player1.component.html',
 })
 export class Player1Component implements OnInit {
   salt: any;
