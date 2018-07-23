@@ -13,6 +13,6 @@
         <button type="button" class="btn btn-primary btn-lg" [disabled]="!hasPlayer2Move" (click)="reveal()"> <i *ngIf="loadingReveal" class="fa fa-refresh fa-spin fa-1x"></i> Reveal</button>
     </div>
     <div class="col-md-6 text-left">
-        <button type="button" class="btn btn-danger btn-lg" [disabled]="hasPlayer2Move" (click)="refund()"> <i *ngIf="loadingRefund" class="fa fa-refresh fa-spin fa-1x"></i> Refund</button>
+        <button type="button" class="btn btn-danger btn-lg" [disabled]="!hasTimedOut" (click)="refund()"> <i *ngIf="loadingRefund" class="fa fa-refresh fa-spin fa-1x"></i> Timeout</button>
     </div>
 </div>

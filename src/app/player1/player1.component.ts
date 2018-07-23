@@ -11,14 +11,17 @@ export class Player1Component implements OnInit {
   gameContract: any;
   move: any;
   gameContractAddress: any;
-  timeRemaining: any;
   baseUrl: any;
   completeUrl: any;
-  hasPlayer2Move: boolean = false;
   won: boolean = false;
+  hasTimedOut: boolean = false;
+  hasPlayer2Move: boolean = false;
   gameFinalized: boolean = false;
   loadingRefund: boolean = false;
   loadingReveal: boolean = false;
+  lastActionTime: any;
+  timeout: any;
+
 
   constructor(private rps_service: RpsService, private router: Router) { 
 
@@ -34,16 +37,33 @@ export class Player1Component implements OnInit {
 
     this.gameContract = this.rps_service.getGameContract(this.gameContractAddress);
 
-    this.rps_service.getUser().then(user => {
-      var intervalId = setInterval(() => {
-        this.gameContract.methods.c2().call({from: user}).then(move => {
-          if(move != 0){
-            this.hasPlayer2Move = true;
-            clearInterval(intervalId);
-          }
-        });
-      }, 5000)
+    this.rps_service.getLastAction().then(time => {
+      this.lastActionTime = time;
     });
+
+    this.rps_service.getTimeoutTime().then(timeout => {
+      this.timeout = timeout;
+    });
+
+    var intervalId = setInterval(() => {
+      this.rps_service.getPlayer2Move().then(move => {
+        if(move == 0){
+          this.checkTimeout();
+        } else {
+          this.hasPlayer2Move = true;
+          this.hasTimedOut = false;
+          clearInterval(intervalId);
+        }
+      });
+    }, 5000)
+  }
+  // 0x29515e6D1Abd9459450e0c5036e7B34E6D89AcbA
+  checkTimeout(){
+    let timeout = new Date(this.lastActionTime*1000 + this.timeout*1000);
+    let now = new Date();
+    if(now > timeout && !this.hasPlayer2Move){
+      this.hasTimedOut = true;
+    }
   }
 
   reveal(){

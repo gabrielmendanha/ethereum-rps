@@ -1,5 +1,5 @@
 <h1 *ngIf="!hasPlayer2Move" class="text-center">Choose your move</h1>
-<h1 *ngIf="hasPlayer2Move" class="text-center">Waiting for player 1 to revel the move...</h1>
+<h1 *ngIf="hasPlayer2Move" class="text-center">Waiting for player 1 to reveal the move...</h1>
 <div class="row justify-content-center">
     <div class="col-md-12 mb-2 text-center">
         <div class="btn-group btn-group-toggle" ngbRadioGroup [(ngModel)]="move">
@@ -26,6 +26,6 @@
         <button type="button" class="btn btn-primary btn-lg" [disabled]="hasPlayer2Move" (click)="play()"> <i *ngIf="loadingPlay" class="fa fa-refresh fa-spin fa-1x"></i> Play!</button>
     </div>
     <div class="col-md-6 text-left">
-        <button type="button" class="btn btn-danger btn-lg" [disabled]="!hasPlayer2Move" (click)="refund()"> <i *ngIf="loadingRefund" class="fa fa-refresh fa-spin fa-1x"></i> Refund</button>
+        <button type="button" class="btn btn-danger btn-lg" [disabled]="!hasTimedOut" (click)="refund()"> <i *ngIf="loadingRefund" class="fa fa-refresh fa-spin fa-1x"></i> Timeout</button>
     </div>
 </div>

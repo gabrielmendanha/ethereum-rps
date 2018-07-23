@@ -16,6 +16,7 @@ export class RpsService {
 
       this.web3 = new Web3(window['web3'].currentProvider);
       this.hasherContract = new this.web3.eth.Contract(hasherAbi,  hasherContractAddress);
+      this.getUser();
     }
   }
 
@@ -71,7 +72,7 @@ export class RpsService {
   }
 
   calculateHash(move, salt) {
-    return this.hasherContract.methods.hash(move, salt).call({from: this.defaultUserAccount});
+    return this.hasherContract.methods.hash(move, salt).call();
   }
 
   reveal(move, salt){
@@ -87,7 +88,19 @@ export class RpsService {
   }
 
   getStake(){
-    return this.gameContract.methods.stake().call({from: this.defaultUserAccount});
+    return this.gameContract.methods.stake().call();
+  }
+
+  getPlayer2Move(){
+    return this.gameContract.methods.c2().call();
+  }
+
+  getLastAction(){
+    return this.gameContract.methods.lastAction().call();
+  }
+
+  getTimeoutTime(){
+    return this.gameContract.methods.TIMEOUT().call();
   }
 
   play(stake, move){
